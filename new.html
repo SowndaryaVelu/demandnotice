@@ -3,59 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demand Notice</title>
+    <title>Property Tax Demand Notice</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
+            font-family: 'Arial', sans-serif;
+            margin: 40px;
             padding: 20px;
+            border: 2px solid black;
+            max-width: 800px;
+            margin: auto;
+            background-color: #f9f9f9;
         }
-        button {
-            background-color: #28a745;
+        .header {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            text-transform: uppercase;
+        }
+        .sub-header {
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .contact {
+            text-align: center;
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+        .content {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .tax-details {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .tax-details th, .tax-details td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        .tax-details th {
+            background-color: #ddd;
+        }
+        .signature {
+            margin-top: 30px;
+            text-align: left;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button {
+            background-color: #007BFF;
             color: white;
             padding: 10px 15px;
             border: none;
-            border-radius: 6px;
             font-size: 16px;
             cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
         }
-        button:hover {
+        .button:hover {
             opacity: 0.8;
         }
     </style>
 </head>
 <body>
 
-    <h2>Demand Notice</h2>
-    <p>Click the button below to generate your demand notice PDF.</p>
-    <button onclick="generatePDF()">📄 Generate PDF</button>
+    <div class="header">TRIVANDRUM CITY CORPORATION</div>
+    <div class="sub-header">Office of the Revenue Department, Thiruvananthapuram, Kerala - 695001</div>
+    <div class="contact">📞 +91-471-XXXXXXX | ✉ Email: revenue@trivandrum.gov.in</div>
+    <hr>
+
+    <p><strong>Date:</strong> <span id="currentDate"></span></p>
+    <p><strong>To:</strong></p>
+    <p><strong>Property Owner:</strong> <span id="owner"></span></p>
+    <p><strong>Property Address:</strong> <span id="address"></span></p>
+    <p><strong>Ward Number:</strong> <span id="ward"></span></p>
+    <p><strong>Property ID:</strong> <span id="propertyId"></span></p>
+
+    <h2 style="text-align:center; text-decoration:underline;">Subject: Property Tax Demand Notice - <span id="taxYear"></span></h2>
+
+    <p>Dear <span id="owner2"></span>,</p>
+
+    <p class="content">
+        This is to notify you that the Property Tax for the financial year <span id="taxYear2"></span> on your property located at <span id="address2"></span>,
+        under Trivandrum City Corporation, remains unpaid. As per the Kerala Municipality Act, 1994,
+        property tax is mandatory, and non-payment may result in penalties and legal actions.
+    </p>
+
+    <table class="tax-details">
+        <tr>
+            <th>Property Type</th>
+            <td id="propertyType"></td>
+        </tr>
+        <tr>
+            <th>Assessed Property Value</th>
+            <td>₹<span id="assessedValue"></span></td>
+        </tr>
+        <tr>
+            <th>Annual Tax Amount</th>
+            <td>₹<span id="annualTax"></span></td>
+        </tr>
+        <tr>
+            <th>Penalty (if applicable)</th>
+            <td>₹<span id="penalty"></span></td>
+        </tr>
+        <tr>
+            <th><strong>Total Amount Due</strong></th>
+            <td><strong>₹<span id="totalDue"></span></strong></td>
+        </tr>
+        <tr>
+            <th>Due Date</th>
+            <td><span id="dueDate"></span></td>
+        </tr>
+    </table>
+
+    <p class="content">
+        <strong>Payment Instructions:</strong><br>
+        You are required to clear the outstanding amount on or before <span id="dueDate2"></span> to avoid additional penalties.
+    </p>
+
+    <div class="button-container">
+        <button class="button" onclick="window.print()">🖨 Print Notice</button>
+    </div>
 
     <script>
         function getQueryParam(param) {
             let params = new URLSearchParams(window.location.search);
-            return params.get(param);
+            return params.get(param) || "N/A";
         }
 
-        function generatePDF() {
-            var { jsPDF } = window.jspdf;
-            var doc = new jsPDF();
-
-            var propertyID = getQueryParam("id") || "Unknown Property";
-            var ownerName = getQueryParam("owner") || "John Doe";
-            var amountDue = getQueryParam("amount") || "$500";
-            var dueDate = getQueryParam("due") || "2025-04-01";
-
-            doc.setFontSize(16);
-            doc.text("Demand Notice", 80, 20);
-            doc.setFontSize(12);
-            doc.text("Property ID: " + propertyID, 20, 40);
-            doc.text("Owner: " + ownerName, 20, 50);
-            doc.text("Amount Due: " + amountDue, 20, 60);
-            doc.text("Due Date: " + dueDate, 20, 70);
-
-            doc.save("Demand_Notice_" + propertyID + ".pdf");
-        }
+        document.getElementById("currentDate").textContent = new Date().toLocaleDateString();
+        document.getElementById("owner").textContent = getQueryParam("owner");
+        document.getElementById("owner2").textContent = getQueryParam("owner");
+        document.getElementById("address").textContent = getQueryParam("address");
+        document.getElementById("address2").textContent = getQueryParam("address");
+        document.getElementById("ward").textContent = getQueryParam("ward");
+        document.getElementById("propertyId").textContent = getQueryParam("id");
+        document.getElementById("taxYear").textContent = getQueryParam("tax_year");
+        document.getElementById("taxYear2").textContent = getQueryParam("tax_year");
+        document.getElementById("propertyType").textContent = getQueryParam("type");
+        document.getElementById("assessedValue").textContent = getQueryParam("value");
+        document.getElementById("annualTax").textContent = getQueryParam("tax");
+        document.getElementById("penalty").textContent = getQueryParam("penalty");
+        document.getElementById("totalDue").textContent = getQueryParam("total");
+        document.getElementById("dueDate").textContent = getQueryParam("due");
+        document.getElementById("dueDate2").textContent = getQueryParam("due");
     </script>
 
 </body>
