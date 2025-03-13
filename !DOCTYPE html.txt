@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demand Notice</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Demand Notice</h2>
+    <p>Click the button below to generate your demand notice PDF.</p>
+    <button onclick="generatePDF()">📄 Generate PDF</button>
+
+    <script>
+        function getQueryParam(param) {
+            let params = new URLSearchParams(window.location.search);
+            return params.get(param);
+        }
+
+        function generatePDF() {
+            var { jsPDF } = window.jspdf;
+            var doc = new jsPDF();
+
+            var propertyID = getQueryParam("id") || "Unknown Property";
+            var ownerName = getQueryParam("owner") || "John Doe";
+            var amountDue = getQueryParam("amount") || "$500";
+            var dueDate = getQueryParam("due") || "2025-04-01";
+
+            doc.setFontSize(16);
+            doc.text("Demand Notice", 80, 20);
+            doc.setFontSize(12);
+            doc.text("Property ID: " + propertyID, 20, 40);
+            doc.text("Owner: " + ownerName, 20, 50);
+            doc.text("Amount Due: " + amountDue, 20, 60);
+            doc.text("Due Date: " + dueDate, 20, 70);
+
+            doc.save("Demand_Notice_" + propertyID + ".pdf");
+        }
+    </script>
+
+</body>
+</html>
